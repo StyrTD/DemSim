@@ -438,7 +438,7 @@ function startSim(imp) {
             BirthRateRange.setAttribute("max", "11");
             BirthRateRange.setAttribute("min", "0");
             BirthRateRange.setAttribute("step", "0.05");
-            BirthRateRange.setAttribute("onclick", "BirthRateSlideWatch(imp)");
+            BirthRateRange.setAttribute("oninput", "BirthRateSlideWatch(imp)");
             rangeBar.appendChild(BirthRateRange);
     //Button bar
     var buttonBar = document.createElement("div");

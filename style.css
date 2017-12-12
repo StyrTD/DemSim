@@ -27,8 +27,17 @@
         #graph{
             position: relative;
             left: 45px;
-            margin-bottom: 5px;
             width: 200px;
+            left: 30%;
+        }
+        #graphDiv{
+            border: 1px #222 solid;
+            margin-bottom: 5px;
+            position: relative;
+            width: 300px;
+        }
+        #graphTitle{
+            height: 20px;
         }
         #interfaceName{
             text-align: center;
@@ -49,4 +58,7 @@
         }
         .YearButton{
             margin-left: 29px;
+        }
+        .windowTitle{
+            background-color: navy;
         }
