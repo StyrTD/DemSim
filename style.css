@@ -18,7 +18,7 @@
             margin-right: -50%;
         }
         #interface{
-            position: relative;
+            position: absolute;
             background-color: #f9f9f9;
             border: 1px #888 solid;
             width: 300px;
@@ -30,14 +30,11 @@
             width: 200px;
             left: 30%;
         }
-        #graphDiv{
+        #graphWindow{
             border: 1px #222 solid;
             margin-bottom: 5px;
             position: relative;
             width: 300px;
-        }
-        #graphTitle{
-            height: 20px;
         }
         #interfaceName{
             text-align: center;
@@ -59,6 +56,4 @@
         .YearButton{
             margin-left: 29px;
         }
-        .windowTitle{
-            background-color: navy;
-        }
+        

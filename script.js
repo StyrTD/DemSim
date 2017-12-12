@@ -396,8 +396,8 @@ function BirthSim(imp, round){
     for (var i = 20; i < 42; i++) {
         mothers += imp.pop[i][1];
     }
-    imp.pop[0][0] += Math.floor(mothers * imp.birthRate / (44));
-    imp.pop[0][1] += Math.floor(mothers * imp.birthRate / (44));
+    imp.pop[0][0] += Math.floor(mothers * 1.05 * imp.birthRate / (44));
+    imp.pop[0][1] += Math.floor(mothers * (1/1.05) * imp.birthRate / (44));
     console.log(imp);
     return(imp.pop);
 }
@@ -427,7 +427,14 @@ function startSim(imp) {
     //Build Interface
     var interface = document.createElement("div");
     interface.id = "interface";
-    document.body.appendChild(interface);
+    createWindow(interface, document.body);
+    //Build GraphWindow
+    var graphWindow = document.createElement("div");
+        graphWindow.id = "graphWindow";
+        createWindow(graphWindow, document.body);
+        var graph = document.getElementById("graph");
+        graph.parentNode.removeChild(graph);
+        document.getElementById("graphWindow").appendChild(graph);
     //Name Display
     var interfaceName = document.createElement("h2");
     interfaceName.id = "interfaceName";
