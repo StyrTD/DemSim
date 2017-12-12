@@ -1,0 +1,30 @@
+﻿<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="mobile.css" media="(orientation: portrait)">
+    <title>DemSim 0.1</title>
+</head>
+<body>
+    <h1>DemSim 0.1</h1>
+    <div id="graphDiv" class="window">
+        <div id="graphTitle" class="windowTitle">
+
+        </div>
+        <svg id="graph" width="200" height="300">
+            <line id="ridge" x1="100" y1="0" x2="100" y2="300" style="stroke:rgb(14, 14, 14); stroke-width: 2;" />
+        </svg>
+    </div>
+    <div id="input">
+        <table>
+        <tr><td>Name:</td><td><input type="text" name="name" value="Gierningen"></td></tr>
+        <tr><td>Bevölkerung:</td><td><input type="number" name="pop" value="62000000"></td></tr>
+        <tr><td>Fläche:</td><td><input type="number" name="area" value="475442"></td></tr>
+        <tr><td>Geburtenrate:</td><td><input type="number" name="birthRate" value="1.8"></td></tr>
+        <tr><td>Sterberate:</td><td><input type="number" name="dieRate" value="1.3"></td></tr>
+        <tr><td>Lebenserwartung:</td><td><input type="number" name="lifeExp" value="75"></td></tr>
+        <tr><td colspan="2"><button id="start" type="button" onclick="startSim(imp)">Start!</button></td></tr>
+    </table>
+    </div>
+</body>
+<script type="text/javascript" src="script.js"></script>
+</html>
