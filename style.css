@@ -1,0 +1,52 @@
+ body{
+            font-family: Segoe UI;
+        }
+        #input{
+            background-color: #f2f2f2;
+            float: right;
+            border: #444 solid 2px;
+            margin: 15px;
+            width: 500px;
+            height: 300px;
+        }
+        input[name="birthRate"], input[name="dieRate"], input[name="lifeExp"]{
+            width: 40px;
+        }
+        #start{
+            position: relative;
+            vertical-align: middle;
+            margin-right: -50%;
+        }
+        #interface{
+            position: relative;
+            background-color: #f9f9f9;
+            border: 1px #888 solid;
+            width: 300px;
+            height: 200px;
+        }
+        #graph{
+            position: relative;
+            left: 45px;
+            margin-bottom: 5px;
+            width: 200px;
+        }
+        #interfaceName{
+            text-align: center;
+        }
+        #interfaceYear{
+            text-align: center;
+            position: relative;
+            top: -20px;
+        }
+        #interfaceTotalPop{
+            text-align: center;
+            position: relative;
+            top: -40px;
+        }
+        #BirthRateRange{
+            top: -50px;
+            position: relative;
+        }
+        .YearButton{
+            margin-left: 29px;
+        }
