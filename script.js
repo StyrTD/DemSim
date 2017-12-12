@@ -112,10 +112,12 @@ var imp = {
     "name": name,
     "year": 2014,
     "area": 475442,
-    "svg": svg,
-    "svgNS": svgNS,
     "dieRate": 0,
     "birthRate": 0,
+    "html": {
+        "svg": svg,
+        "svgNS": svgNS
+    },
     "lifeExp": "75",
     "totalPop": 0
 }
@@ -257,6 +259,14 @@ function BirthRateSlideWatch(imp) { //Requires two-dimensional array!
     return(imp);
 }
 
+function DieRateSlideWatch(imp) { //Requires two-dimensional array!
+    var range = document.getElementById("DieRateRange");
+    var rangeIntro = document.getElementById("DieRateRangeIntro");
+    imp.dieRate = range.value;
+    rangeIntro.innerHTML = ("Sterberate: " + imp.dieRate);
+    return(imp);
+}
+
 function FormatNum(x) {
     var x = String(x).split("");
     for (var i = 1; i < (x.length+1); i++){
@@ -270,8 +280,8 @@ function FormatNum(x) {
 
 function runSVG(imp) { //Grafische Initialisierung
     //Processing absolute height
-    var ridge = imp.svg.getElementById("ridge");                         //Detect Ridge ID
-    console.log(imp.svg.style.width);
+    var ridge = imp.html.svg.getElementById("ridge");                         //Detect Ridge ID
+    console.log(imp.html.svg.style.width);
     var y1 = parseInt(ridge.getAttributeNS(null, "y1"));                 //Y1 Coordinate
     var y2 = parseInt(ridge.getAttributeNS(null, "y2"));                 //Y2 Coordinate
     var yLength = Math.abs(y2 - y1);                                     //Y1-Y2 distance
@@ -290,12 +300,12 @@ function runSVG(imp) { //Grafische Initialisierung
 
     //MALE GRAPH
         //Check if Graph exists
-        var checkDemoGraphM = imp.svg.getElementById("DemoGraphM");
+        var checkDemoGraphM = imp.html.svg.getElementById("DemoGraphM");
 
         if (checkDemoGraphM === null) {
-            var line = document.createElementNS(imp.svgNS, 'path');     //Create new if inexistent
+            var line = document.createElementNS(imp.html.svgNS, 'path');     //Create new if inexistent
         } else {
-            var line = imp.svg.getElementById("DemoGraphM");             //Else: Overwrite.
+            var line = imp.html.svg.getElementById("DemoGraphM");             //Else: Overwrite.
         }
 
     
@@ -315,12 +325,12 @@ function runSVG(imp) { //Grafische Initialisierung
     }
     //FEMALE GRAPH
         //Check if Graph exists
-        var checkDemoGraphF = imp.svg.getElementById("DemoGraphF");
+        var checkDemoGraphF = imp.html.svg.getElementById("DemoGraphF");
     
             if (checkDemoGraphF === null) {
-                var line = document.createElementNS(imp.svgNS, 'path'); //Create new if inexistent
+                var line = document.createElementNS(imp.html.svgNS, 'path'); //Create new if inexistent
             } else {
-                var line = imp.svg.getElementById("DemoGraphF");        //Else: Overwrite.
+                var line = imp.html.svg.getElementById("DemoGraphF");        //Else: Overwrite.
             }
     var d = 'M' + 100 + ' ' + 300 + '  L' + 100 + ' ' + 300 + ' ';      //Starting point: Move to (100|300) and begin to draw a line there. 
     for (var i = 0; i <= xSet; i++) {
@@ -339,12 +349,12 @@ function runSVG(imp) { //Grafische Initialisierung
     //BODY
         //Visible ridge
             //Check if Graph exists
-            var checkVisRidge = imp.svg.getElementById("VisRidge");
+            var checkVisRidge = imp.html.svg.getElementById("VisRidge");
         
                 if (checkVisRidge === null) {
-                    var line = document.createElementNS(imp.svgNS, 'line'); //Create new if inexistent
+                    var line = document.createElementNS(imp.html.svgNS, 'line'); //Create new if inexistent
                 } else {
-                    var line = imp.svg.getElementById("VisRidge");          //Else: Overwrite.
+                    var line = imp.html.svg.getElementById("VisRidge");          //Else: Overwrite.
                 }
                 line.setAttribute('x1', 100);
                 line.setAttribute('x2', 100);
@@ -359,19 +369,30 @@ function runSVG(imp) { //Grafische Initialisierung
                 }
 }
 function DieSim(imp, round) {
-    console.log(imp);
+    //Old value: 1.0825
+    const DeathConst = 1.100694; //b ^ 120 = 100000
         for(var i = 0; i < 100; i++){
-            imp.pop[i][0] = Math.floor(imp.pop[i][0] * (1 - (i * (1/(1500 - imp.lifeExp)) ) ) );
-            imp.pop[i][1] = Math.floor(imp.pop[i][1] * (1 - (i * (1/(2100 - imp.lifeExp)) ) ) );
+            imp.pop[i][0] = Math.round(imp.pop[i][0] * (1 - ((imp.dieRate ) * Math.pow((DeathConst) , i)/100000)));
+            imp.pop[i][1] = Math.round(imp.pop[i][1] * (1 - ((imp.dieRate * Math.pow((DeathConst) , i)/100000))));
+            if (imp.pop[i][0] < 0){
+                imp.pop [i][0] = 0;
+            }
+            if (imp.pop[i][1] < 0){
+                imp.pop [i][1] = 0;
+            }
         }
-    imp.pop[100][0] = 0;
-    imp.pop[100][1] = 0;
-    console.log(imp.pop);
+    imp.pop[100][0] = Math.round(imp.pop[100][0] * (1 - (imp.dieRate * Math.pow((DeathConst) , 106)/100000)));
+    imp.pop[100][1] = Math.round(imp.pop[100][1] * (1 - (imp.dieRate * Math.pow((DeathConst) , 106)/100000)));
+    if (imp.pop[100][0] < 0){
+        imp.pop [100][0] = 0;
+    }
+    if (imp.pop[100][1] < 0){
+        imp.pop [100][1] = 0;
+    }
     return(imp.pop);
 }
 function BirthSim(imp, round){
     var mothers = 0;
-    console.log(imp);
     for (var i = 20; i < 42; i++) {
         mothers += imp.pop[i][1];
     }
@@ -440,6 +461,20 @@ function startSim(imp) {
             BirthRateRange.setAttribute("step", "0.05");
             BirthRateRange.setAttribute("oninput", "BirthRateSlideWatch(imp)");
             rangeBar.appendChild(BirthRateRange);
+        //Birth rate
+        var DieRateRangeIntro            = document.createElement("p");
+            DieRateRangeIntro.id         = "DieRateRangeIntro";
+            DieRateRangeIntro.innerHTML  = "Sterberate: " + imp.birthRate;
+            rangeBar.appendChild(DieRateRangeIntro);
+        var DieRateRange      = document.createElement("input");
+            DieRateRange.id   = "DieRateRange";
+            DieRateRange.setAttribute("class", "shortRange");
+            DieRateRange.setAttribute("type", "range");
+            DieRateRange.setAttribute("max", "11");
+            DieRateRange.setAttribute("min", "0");
+            DieRateRange.setAttribute("step", "0.05");
+            DieRateRange.setAttribute("oninput", "DieRateSlideWatch(imp)");
+            rangeBar.appendChild(DieRateRange);
     //Button bar
     var buttonBar = document.createElement("div");
         buttonBar.id = "buttonBar";
@@ -486,13 +521,7 @@ function YearSim(imp, round){
 //VarCheck
     //Check Pop
     if (imp.pop[0][0] === undefined) {
-        imp = {
-            "pop": PopGenderer(imp.pop),
-            "name": imp.name,
-            "year": 2014,
-            "svg": imp.svg,
-            "svgNS": imp.svgNS
-        }
+        imp.pop =  PopGenderer(imp.pop),
         imp.totalPop = SumTwoDimensionalArray(imp.pop);
     }
 //Build
