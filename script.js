@@ -16,27 +16,27 @@
 	760000,
 	760000,
 	760000,
+	800000,
+	900000,
+	850000,
 	700000,
-	700000,
-	700000,
-	700000,
-	700000,
+	820000,
 	850000,
 	800000,
-	800000,
-	600000,
-	900000,
-	800000,
+	700000,
+	700000,
 	950000,
+	1050000,
+	1050000,
 	1230000,
 	1100000,
-	1000000,
-	1080000,
-	1000000,
+	1200000,
+	1180000,
+	1200000,
 	1010000,
 	1090000,
-	1010000,
-	1280000,
+	1210000,
+	1480000,
 	1510000,
 	1810000,
 	1970000,
@@ -51,13 +51,13 @@
 	1000000,
 	1020000,
 	1170000,
-	850000,
-	760000,
-	840000,
-	850000,
-	800000,
-	760000,
-	600000,
+	1150000,
+	960000,
+	990000,
+	950000,
+	900000,
+	960000,
+	700000,
 	550000,
 	400000,
 	300000,
@@ -79,29 +79,29 @@
 	600000,
 	600000,
 	600000,
-	500000,
-	500000,
-	500000,
-	500000,
-	500000,
-	500000,
-	300000,
-	250000,
-	250000,
-	200000,
-	200000,
-	200000,
-	200000,
-	200000,
-	200000,
-	100000,
-	11000,
-	80000,
+	380000,
+	350000,
+	260000,
+	190000,
+	170000,
+	170000,
+	150000,
+	150000,
+	150000,
+	120000,
+	110000,
+	110000,
+	70000,
 	50000,
-	30000,
+	40000,
+	59000,
+	60000,
 	20000,
-	20000,
-	50000
+	10000,
+	9000,
+	4500,
+	4000,
+	4000
 ];
 var name = "Gierningen";
 var svg = document.getElementById("graph");
@@ -110,22 +110,30 @@ var startButton = document.getElementById("start");
 var dlg = {
     "title": "Þeudal"
 }
+pop = PopGenderer(pop);
 var imp = {
     "pop": pop,
+    "totalPop": SumTwoDimensionalArray(pop),
+    "men": 0,
+    "women": 0,
     "name": name,
     "year": 2014,
-    "ver":  "Alpha 0.1 - so fucking Alpha it contains angles!",
+    "ver":  "Alpha 0.2 - so fucking Alpha it contains angles!",
     "area": 475442,
-    "dieRate": 0,
+    "dieRate": 8,   //per 1,000 persons/year
     "dlg": dlg,
-    "birthRate": 0,
+    "birthRate": 1.6,
     "html": {
         "svg": svg,
         "svgNS": svgNS
     },
     "lifeExp": "75",
-    "totalPop": 0
 }
+document.title = ver;
+    imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
+    imp.women = SumTwoDimensionalArrayRow(imp.pop, 1);
+
+    
 console.log(imp);
 //Vorberechnung
 //---------------------------------------------------------------------------------------------------------
@@ -144,6 +152,15 @@ function rowSum(x, span) { //Summiert Arrays
     }
     return (y);
 }
+function SumTwoDimensionalArrayRow(x, s) { //Sums two-dimensional arrays
+    var y = 0;
+    for(var i = 0; i < MeasureTwoDimensionLength(x)[0]; i++){
+
+            y = y + x[i][s];
+    }
+    return(y);
+}
+
 function SumTwoDimensionalArray(x) { //Sums two-dimensional arrays
     var y = 0;
     for(var i = 0; i < MeasureTwoDimensionLength(x)[0]; i++){
@@ -286,7 +303,6 @@ function FormatNum(x) {
 function runSVG(imp) { //Grafische Initialisierung
     //Processing absolute height
     var ridge = imp.html.svg.getElementById("ridge");                         //Detect Ridge ID
-    console.log(imp.html.svg.style.width);
     var y1 = parseInt(ridge.getAttributeNS(null, "y1"));                 //Y1 Coordinate
     var y2 = parseInt(ridge.getAttributeNS(null, "y2"));                 //Y2 Coordinate
     var yLength = Math.abs(y2 - y1);                                     //Y1-Y2 distance
@@ -403,12 +419,11 @@ function BirthSim(imp, round){
     }
     imp.pop[0][0] += Math.floor(mothers * 1.05 * imp.birthRate / (44));
     imp.pop[0][1] += Math.floor(mothers * (1/1.05) * imp.birthRate / (44));
-    console.log(imp);
     return(imp.pop);
 }
 function runInterface(imp) {
     runSVG(imp);
-    console.log(imp);
+
     //Define Elements
     var intYear     = document.getElementById("interfaceYear");
     var intTotalPop = document.getElementById("interfaceTotalPop"); 
@@ -420,26 +435,19 @@ function runInterface(imp) {
 }
 function startSim(imp) {
     console.log("%cDemSim has been started.", "background: #44f; color: #fff; padding: 3px; border-radius: 5px;");
-    //Fetch Input Values
-    imp.name        = document.getElementsByName("name")[0].value;      //Name
-    imp.area        = document.getElementsByName("area")[0].value;      //Area
-    imp.birthRate   = document.getElementsByName("birthRate")[0].value; //Birth Rate
-    imp.dieRate     = document.getElementsByName("dieRate")[0].value;   //Die Rate
-    imp.lifeExp     = document.getElementsByName("lifeExp")[0].value;   //Life Expectancy
-    //Delete old field
-    var input = document.getElementById("input");
-    input.parentNode.removeChild(input);
     //Build Interface
     createNavBar(imp);
     createFootBar(imp);
     var interface = document.createElement("div");
     interface.id = "interface";
+    interface.title = "Interface";
     interface.style.transform = "translateX(900px) translateY(300px)";
     createWindow(interface, document.body);
     //Build GraphWindow
     var graphWindow = document.createElement("div");
         graphWindow.id = "graphWindow";
         graphWindow.style.transform = "translateX(550px) translateY(300px)";
+        graphWindow.title = "Population Pyramid";
         createWindow(graphWindow, document.body);
         var graph = document.getElementById("graph");
         graph.parentNode.removeChild(graph);
@@ -523,23 +531,36 @@ function startSim(imp) {
 }
 
 function YearSim(imp, round){
-    console.log("Rounds:" + round);
     imp.year = imp.year + round;
     for(var i = 0; i < round; i++){
     imp.pop = PopAger(imp.pop, 1);
     imp.totalPop = SumTwoDimensionalArray(imp.pop);
     imp.pop = DieSim(imp, round);
     imp.pop = BirthSim(imp, round);
+    if(imp.totalPop == 0){
+        GameOver(imp);
     }
-    console.log("Die done.");
+    //Stats
+    imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
+    imp.women = SumTwoDimensionalArrayRow(imp.pop, 1);
+    console.log(imp);
+    }
     runInterface(imp);
+}
+
+function GameOver(imp){
+    //De-Transparent all other windows
+        for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+            document.getElementsByClassName("window")[i].style.opacity = 0;
+        }
+
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------
 //VarCheck
     //Check Pop
     if (imp.pop[0][0] === undefined) {
-        imp.pop =  PopGenderer(imp.pop),
+        imp.pop =  
         imp.totalPop = SumTwoDimensionalArray(imp.pop);
     }
 //Build
@@ -548,5 +569,3 @@ graph.id = "graph";
 graph.height = 300;
 graph.width = 200;
 document.body.appendChild(graph);
-//-----------------------------------------------------------------------------------------------------------------------------------------
-startButton.addEventListener("click", null, startSim);

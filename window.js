@@ -48,7 +48,11 @@ function createWindow(imp, parent){
         bar.setAttribute("class", "windowTitle");
         bar.id = imp.id + "_title";
         bar.style.zIndex = "1";
-        bar.innerHTML = imp.id;
+        if(imp.title === undefined){
+            bar.innerHTML = imp.id;
+        } else {
+            bar.innerHTML = imp.title;
+        }
         bar.draggable = true;
         bar.setAttribute("ondrag", "WindowDrag(event, " + imp.id + ")");
         bar.setAttribute("ondragend", "WindowDragEnd(event, " + imp.id + ")");
@@ -64,6 +68,11 @@ function createWindow(imp, parent){
 function WindowDrag(ev, imp){
     ev.preventDefault();
     var obj = document.getElementById(imp.id);
+    //Transparent all other windows
+    for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+        document.getElementsByClassName("window")[i].style.opacity = 0.5;
+                                                 obj.style.opacity = 1;
+    }
     if(imp === undefined){
         obj.setAttribute("zIndex", obj.style.zIndex);
     }
@@ -92,11 +101,16 @@ function WindowDrag(ev, imp){
 function WindowDragEnd(ev, imp){
     ev.preventDefault();
     var obj = document.getElementById(imp.id);
-    console.log(obj.zIndex);
+        //De-Transparent all other windows
+        for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+            document.getElementsByClassName("window")[i].style.opacity = 1;
+            document.getElementsByClassName("window")[i].style.zIndex = 0;
+        }
+        obj.style.zIndex = 1;
     obj.style.zIndex = parseInt(obj.getAttribute("zIndex")) + 1;
     obj.removeAttribute("zIndex");
-    var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
-    var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
+    var transX = imp.parentElement.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
+    var transY = imp.parentElement.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     if(transX === null){
         var transX = ["0px", "0px", "px"];
     }
@@ -110,10 +124,8 @@ function WindowDragEnd(ev, imp){
     var mouseY = window.event.clientY;
     var posX = pos.left + (pos.right - pos.left) / 2 - transX;
     var posY = pos.top - transY;
-    console.log(mouseX);
-    console.log(posX + "-" + transX);
-    var moveX = Math.round(mouseX - (posX - transX));
-    var moveY = Math.round(mouseY - (posY - transY));
+    var moveX = Math.round(mouseX + (posX - transX));
+    var moveY = Math.round(mouseY + (posY - transY));
     var translateX = "translateX(" + moveX + "px ) ";
     var translateY = "translateY(" + moveY + "px)";
     imp.style.transform = translateX + translateY;

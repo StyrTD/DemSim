@@ -18,9 +18,10 @@
     border: 1px #888 solid;
     left: 0px;
     right: 0px;
+    box-shadow: 5px 3px 5px #888;
 }
 .windowBox{
-    overflow: scroll;
+    overflow: hidden;
     background-color: #f9f9f9;
 }
 #windowNav{
@@ -41,7 +42,7 @@
     left: 0px;
 }
 #windowNavTitle{
-    position: relative;
+    position: fixed;
     top: -17px;
     left: 3px;
     font-family: Candara;
