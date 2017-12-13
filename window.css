@@ -3,4 +3,30 @@
             color: #fff;
             font-family: Tahoma;
             height: 20px;
+            width: inherit;
         }
+.window{
+    position: absolute;
+    border: 1px #888 solid;
+    left: 0px;
+    right: 0px;
+}
+.windowBox{
+    overflow: scroll;
+    background-color: #f9f9f9;
+}
+#windowNav{
+    position: fixed;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+    height: 50px;
+    background-color: #fff;
+    z-index: 10000;
+}
+#windowNavTitle{
+    position: relative;
+    top: -17px;
+    left: 3px;
+    font-family: Candara;
+}

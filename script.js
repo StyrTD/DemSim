@@ -107,12 +107,16 @@ var name = "Gierningen";
 var svg = document.getElementById("graph");
 var svgNS = svg.namespaceURI;
 var startButton = document.getElementById("start");
+var dlg = {
+    "title": "Þeudal"
+}
 var imp = {
     "pop": pop,
     "name": name,
     "year": 2014,
     "area": 475442,
     "dieRate": 0,
+    "dlg": dlg,
     "birthRate": 0,
     "html": {
         "svg": svg,
@@ -425,35 +429,40 @@ function startSim(imp) {
     var input = document.getElementById("input");
     input.parentNode.removeChild(input);
     //Build Interface
+    createNavBar(imp);
     var interface = document.createElement("div");
     interface.id = "interface";
+    interface.style.transform = "translateX(900px) translateY(300px)";
     createWindow(interface, document.body);
     //Build GraphWindow
     var graphWindow = document.createElement("div");
         graphWindow.id = "graphWindow";
+        graphWindow.style.transform = "translateX(550px) translateY(300px)";
         createWindow(graphWindow, document.body);
         var graph = document.getElementById("graph");
         graph.parentNode.removeChild(graph);
         document.getElementById("graphWindow").appendChild(graph);
+    //Fetch Box
+    var interfaceBox = document.getElementById("interface_box");
     //Name Display
     var interfaceName = document.createElement("h2");
     interfaceName.id = "interfaceName";
     interfaceName.innerHTML = imp.name;
-    interface.appendChild(interfaceName);
+    interfaceBox.appendChild(interfaceName);
     //Year Display
     var interfaceYear = document.createElement("h5");
     interfaceYear.id = "interfaceYear";
     interfaceYear.innerHTML = imp.year;
-    interface.appendChild(interfaceYear);
+    interfaceBox.appendChild(interfaceYear);
     //Population Display
     var interfaceTotalPop = document.createElement("h3");
     interfaceTotalPop.id = "interfaceTotalPop";
     interfaceTotalPop.innerHTML = FormatNum(imp.totalPop);
-    interface.appendChild(interfaceTotalPop);
+    interfaceBox.appendChild(interfaceTotalPop);
     //Range bars
     var rangeBar = document.createElement("div");
         rangeBar.id = "rangeBar";
-        interface.appendChild(rangeBar);
+        interfaceBox.appendChild(rangeBar);
         //Birth rate
         var BirthRateRangeIntro            = document.createElement("p");
             BirthRateRangeIntro.id         = "BirthRateRangeIntro";
@@ -485,7 +494,7 @@ function startSim(imp) {
     //Button bar
     var buttonBar = document.createElement("div");
         buttonBar.id = "buttonBar";
-        interface.appendChild(buttonBar);
+        interfaceBox.appendChild(buttonBar);
         //1 year
         var Year1Button = document.createElement("button");
             Year1Button.id = "Year1Button";
