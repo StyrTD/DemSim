@@ -114,6 +114,7 @@ var imp = {
     "pop": pop,
     "name": name,
     "year": 2014,
+    "ver":  "Alpha 0.1 - so fucking Alpha it contains angles!",
     "area": 475442,
     "dieRate": 0,
     "dlg": dlg,

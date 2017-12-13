@@ -1,11 +1,34 @@
 function createNavBar(imp){
     var nav           = document.createElement("div");
         nav.id        = "windowNav";
+        //Title
         var title           = document.createElement("h1");
             title.id        = "windowNavTitle";
             title.innerHTML = imp.dlg.title;
+                var ver     = document.createElement("sub");
+                    ver.setAttribute("class", "ver");
+                    ver.innerHTML   =   imp.ver;
+                    title.appendChild(ver);
             nav.appendChild(title);
+        //Menu
+        var menu            = document.createElement("div");
+            menu.id         = "menuBarContainer";
+                var bar1    = document.createElement("div");
+                    bar1.setAttribute("class", "menuBar1");
+                var bar2    = document.createElement("div");
+                    bar2.setAttribute("class", "menuBar2");
+                var bar3    = document.createElement("div");
+                    bar3.setAttribute("class", "menuBar3");
+            menu.appendChild(bar1);
+            menu.appendChild(bar2);
+            menu.appendChild(bar3);
+            menu.setAttribute("onclick", "slideMenuBar(this)");
+            nav.appendChild(menu);
     document.body.appendChild(nav);
+
+}
+function slideMenuBar(imp){
+    imp.classList.toggle("change");
 }
 function createFootBar(imp){
     var foot          = document.createElement("div");
@@ -20,6 +43,7 @@ function createWindow(imp, parent){
     if(parent === undefined){var parent = document;}    //Undefined Ini
     imp.setAttribute("class", "window");
     //Clicking Bar
+        imp.style.backgroundColor = "#fff";
         var bar = document.createElement("div");
         bar.setAttribute("class", "windowTitle");
         bar.id = imp.id + "_title";
@@ -40,11 +64,10 @@ function createWindow(imp, parent){
 function WindowDrag(ev, imp){
     ev.preventDefault();
     var obj = document.getElementById(imp.id);
-    if(obj.getAttribute("zIndex") === undefined){
+    if(imp === undefined){
         obj.setAttribute("zIndex", obj.style.zIndex);
     }
     obj.style.zIndex = 9000;
-    obj.style.backgroundColor = "#fff";
     var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     if(transX === null){
@@ -72,7 +95,6 @@ function WindowDragEnd(ev, imp){
     console.log(obj.zIndex);
     obj.style.zIndex = parseInt(obj.getAttribute("zIndex")) + 1;
     obj.removeAttribute("zIndex");
-    obj.style.backgroundColor = "#fff";
     var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     if(transX === null){
