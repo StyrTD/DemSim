@@ -7,6 +7,15 @@ function createNavBar(imp){
             nav.appendChild(title);
     document.body.appendChild(nav);
 }
+function createFootBar(imp){
+    var foot          = document.createElement("div");
+        foot.id        = "windowFoot";
+        var footer           = document.createElement("sub");
+            footer.id        = "windowFooter";
+            footer.innerHTML = "<a href='LICENSE'>© Till Diegeler 2017 - 2018</a>";
+            foot.appendChild(footer);
+    document.body.appendChild(foot);
+}
 function createWindow(imp, parent){
     if(parent === undefined){var parent = document;}    //Undefined Ini
     imp.setAttribute("class", "window");

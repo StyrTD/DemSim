@@ -430,6 +430,7 @@ function startSim(imp) {
     input.parentNode.removeChild(input);
     //Build Interface
     createNavBar(imp);
+    createFootBar(imp);
     var interface = document.createElement("div");
     interface.id = "interface";
     interface.style.transform = "translateX(900px) translateY(300px)";

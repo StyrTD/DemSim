@@ -1,6 +1,13 @@
+ /*@keyframes bodyFade{
+     0%     {opacity: 0;
+            background-color: #ccc;}
+     100%   {opacity: 1;}
+ }*/
  body{
             font-family: Segoe UI;
             background-color: #ccc;
+            /*animation-name: bodyFade;
+            animation-duration: 1s;*/
         }
         #start{
             position: relative;

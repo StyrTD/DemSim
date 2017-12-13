@@ -24,6 +24,14 @@
     background-color: #fff;
     z-index: 10000;
 }
+#WindowFoot{
+    height: 20px;
+    background-color: #fff;
+    position: fixed;
+    width: 30%;
+    bottom: 0px;
+    left: 0px;
+}
 #windowNavTitle{
     position: relative;
     top: -17px;
