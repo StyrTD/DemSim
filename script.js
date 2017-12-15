@@ -123,13 +123,14 @@ var imp = {
     "dieRate": 8,   //per 1,000 persons/year
     "dlg": dlg,
     "birthRate": 1.6,
+    "totalBirth": pop[0][0] + pop[0][1],
     "html": {
         "svg": svg,
         "svgNS": svgNS
     },
     "lifeExp": "75",
 }
-document.title = ver;
+document.title = imp.ver;
     imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
     imp.women = SumTwoDimensionalArrayRow(imp.pop, 1);
 
@@ -391,10 +392,10 @@ function runSVG(imp) { //Grafische Initialisierung
 }
 function DieSim(imp, round) {
     //Old value: 1.0825
-    const DeathConst = 1.100694; //b ^ 120 = 100000
+    const DeathConst = 1 - (0.00043413996 * imp.dieRate); //b ^ 120 = 100000
         for(var i = 0; i < 100; i++){
-            imp.pop[i][0] = Math.round(imp.pop[i][0] * (1 - ((imp.dieRate ) * Math.pow((DeathConst) , i)/100000)));
-            imp.pop[i][1] = Math.round(imp.pop[i][1] * (1 - ((imp.dieRate * Math.pow((DeathConst) , i)/100000))));
+            imp.pop[i][0] = Math.round(imp.pop[i][0] * Math.pow((DeathConst) , i));
+            imp.pop[i][1] = Math.round(imp.pop[i][1] * Math.pow((DeathConst) , i));
             if (imp.pop[i][0] < 0){
                 imp.pop [i][0] = 0;
             }
@@ -402,8 +403,8 @@ function DieSim(imp, round) {
                 imp.pop [i][1] = 0;
             }
         }
-    imp.pop[100][0] = Math.round(imp.pop[100][0] * (1 - (imp.dieRate * Math.pow((DeathConst) , 106)/100000)));
-    imp.pop[100][1] = Math.round(imp.pop[100][1] * (1 - (imp.dieRate * Math.pow((DeathConst) , 106)/100000)));
+    imp.pop[100][0] = Math.round(imp.pop[100][0] * Math.pow((DeathConst) , 104));
+    imp.pop[100][1] = Math.round(imp.pop[100][1] * Math.pow((DeathConst) , 103));
     if (imp.pop[100][0] < 0){
         imp.pop [100][0] = 0;
     }
@@ -452,6 +453,17 @@ function startSim(imp) {
         var graph = document.getElementById("graph");
         graph.parentNode.removeChild(graph);
         document.getElementById("graphWindow").appendChild(graph);
+    //Build StatWindow
+    var statWindow      = document.createElement("div");
+        statWindow.id   = "statWindow";
+        statWindow.style.transform = "translateX(700px) translateY(500px)";
+        statWindow.title = "Statistics";
+        createWindow(statWindow, document.body);
+    var statWindowBox   = document.getElementById("statWindow_box");
+    var totalBirthOut    = document.createElement("p");
+        totalBirthOut.id = "totalBirthOut";
+        totalBirthOut.innerHTML = FormatNum(imp.totalBirth) + " Geburten";
+        statWindowBox.appendChild(totalBirthOut);
     //Fetch Box
     var interfaceBox = document.getElementById("interface_box");
     //Name Display
@@ -487,7 +499,7 @@ function startSim(imp) {
             BirthRateRange.setAttribute("step", "0.05");
             BirthRateRange.setAttribute("oninput", "BirthRateSlideWatch(imp)");
             rangeBar.appendChild(BirthRateRange);
-        //Birth rate
+        //Die rate
         var DieRateRangeIntro            = document.createElement("p");
             DieRateRangeIntro.id         = "DieRateRangeIntro";
             DieRateRangeIntro.innerHTML  = "Sterberate: " + imp.birthRate;
@@ -543,6 +555,10 @@ function YearSim(imp, round){
     //Stats
     imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
     imp.women = SumTwoDimensionalArrayRow(imp.pop, 1);
+
+    //TotalBirth
+    imp.totalBirth = imp.pop[0][0] + imp.pop[0][1];
+    document.getElementById("totalBirthOut").innerHTML = FormatNum(imp.totalBirth) + " Geburten";
     console.log(imp);
     }
     runInterface(imp);

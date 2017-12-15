@@ -30,6 +30,13 @@
             position: relative;
             width: 300px;
         }
+        #statWindow{
+            top: -330px;
+            left: -10px;
+            margin-bottom: 5px;
+            position: relative;
+            width: 300px;
+        }
         #interfaceName{
             text-align: center;
         }
