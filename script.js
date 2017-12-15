@@ -118,7 +118,7 @@ var imp = {
     "women": 0,
     "name": name,
     "year": 2014,
-    "ver":  "Alpha 0.2 - so fucking Alpha it contains angles!",
+    "ver":  "Alpha 0.2.1 - so fucking Alpha it contains angles!",
     "area": 475442,
     "dieRate": 8,   //per 1,000 persons/year
     "dlg": dlg,
@@ -130,6 +130,8 @@ var imp = {
     },
     "lifeExp": "75",
 }
+
+//0.2.1 - Feelable improvement of Window system, a.o. intelligent zIndex management
 document.title = imp.ver;
     imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
     imp.women = SumTwoDimensionalArrayRow(imp.pop, 1);

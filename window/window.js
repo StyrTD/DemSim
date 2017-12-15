@@ -1,7 +1,9 @@
 winIni = {
-    "constHeight" : window.innerHeight,
-    "constWidth"  : window.innerWidth
+    "constHeight"   : window.innerHeight,
+    "constWidth"    : window.innerWidth,
+    "mouseRelation" : [1, 1]
 }
+console.log(winIni.mouseRelation);
 function callWin(){
     win = {
       "height"    : window.innerHeight,
@@ -12,8 +14,9 @@ function callWin(){
       }
     }
     winIni = {
-        "constHeight" : window.innerHeight,
-        "constWidth"  : window.innerWidth
+        "constHeight"   : window.innerHeight,
+        "constWidth"    : window.innerWidth,
+        "mouseRelation" : [1, 1]
     }
     return(win);
 }
@@ -63,6 +66,12 @@ function createNavBar(imp){
 function slideMenuBar(imp){
     imp.classList.toggle("change");
 }
+function windowHover(imp){
+    for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+        document.getElementsByClassName("window")[i].style.zIndex = 0;
+    }
+        imp.style.zIndex = 1;
+}
 function createFootBar(imp){
     var foot          = document.createElement("div");
         foot.id        = "windowFoot";
@@ -77,6 +86,7 @@ function createWindow(imp, parent){
     imp.setAttribute("class", "window");
     //Clicking Bar
         imp.style.backgroundColor = "#fff";
+        imp.setAttribute("onclick", "windowHover(this)");
         var bar = document.createElement("div");
         bar.setAttribute("class", "windowTitle");
         bar.id = imp.id + "_title";
@@ -129,6 +139,11 @@ function WindowDrag(ev, imp){
     var posY = pos.top - transY;
     var moveX = Math.round((mouseX - posX));
     var moveY = Math.round((mouseY - posY));
+    if(winIni.mouseRelation[0] == 1 && winIni.mouseRelation[1] == 1){
+        winIni.mouseRelation[0] = mouseX - pos.left;
+        winIni.mouseRelation[1] = mouseY - pos.top;
+
+    }
     var translateX = "translateX(" + moveX + "px ) ";
     var translateY = "translateY(" + moveY + "px)";
     imp.style.transform = translateX + translateY;
@@ -161,7 +176,8 @@ function WindowDragEnd(ev, imp){
     var posY = pos.top - transY;
     var moveX = Math.round(mouseX + (posX - transX));
     var moveY = Math.round(mouseY + (posY - transY));
-    var translateX = "translateX(" + moveX + "px ) ";
-    var translateY = "translateY(" + moveY + "px)";
+    var translateX = "translateX(" + parseInt(moveX - winIni.mouseRelation[0]) + "px ) ";
+    var translateY = "translateY(" + parseInt(moveY - winIni.mouseRelation[1]) + "px)";
+    winIni.mouseRelation = [1, 1];
     imp.style.transform = translateX + translateY;
 }
