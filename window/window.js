@@ -54,6 +54,7 @@ function createNavBar(imp){
             menu.appendChild(bar2);
             menu.appendChild(bar3);
             menu.setAttribute("onclick", "slideMenuBar(this)");
+            menu.setAttribute("ontouch", "slideMenuBar(this)"); //Mobile support
             nav.appendChild(menu);
     document.body.appendChild(nav);
     document.body.setAttribute("onresize", "resizeEvent(imp)");
@@ -87,7 +88,9 @@ function createWindow(imp, parent){
         }
         bar.draggable = true;
         bar.setAttribute("ondrag", "WindowDrag(event, " + imp.id + ")");
+        bar.setAttribute("ontouchmove", "WindowDrag(event, " + imp.id + ")");   //Mobile support
         bar.setAttribute("ondragend", "WindowDragEnd(event, " + imp.id + ")");
+        bar.setAttribute("ontouchend", "WindowDragEnd(event, " + imp.id + ")"); //Mobile support
         imp.appendChild(bar);
     //Inner Box
     var box = document.createElement("div");
