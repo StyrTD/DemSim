@@ -103,6 +103,8 @@
 	4000,
 	4000
 ];
+
+var popBuf; //Buffer to catch delay tasts
 var name = "Gierningen";
 var svg = document.getElementById("graph");
 var svgNS = svg.namespaceURI;
@@ -393,27 +395,12 @@ function runSVG(imp) { //Grafische Initialisierung
                 }
 }
 function DieSim(imp, round) {
-    //Old value: 1.0825
-    const DeathConst = 1 - (0.00043413996 * imp.dieRate); //b ^ 120 = 100000
-        for(var i = 0; i < 100; i++){
-            imp.pop[i][0] = Math.round(imp.pop[i][0] * Math.pow((DeathConst) , i));
-            imp.pop[i][1] = Math.round(imp.pop[i][1] * Math.pow((DeathConst) , i));
-            if (imp.pop[i][0] < 0){
-                imp.pop [i][0] = 0;
-            }
-            if (imp.pop[i][1] < 0){
-                imp.pop [i][1] = 0;
-            }
-        }
-    imp.pop[100][0] = Math.round(imp.pop[100][0] * Math.pow((DeathConst) , 104));
-    imp.pop[100][1] = Math.round(imp.pop[100][1] * Math.pow((DeathConst) , 103));
-    if (imp.pop[100][0] < 0){
-        imp.pop [100][0] = 0;
-    }
-    if (imp.pop[100][1] < 0){
-        imp.pop [100][1] = 0;
-    }
-    return(imp.pop);
+    for(var i = 0; i < 120; i++){
+    console.log(i/120);
+}
+    imp.pop[100][0] = 0;
+    imp.pop[100][1] = 0;
+  return(imp.pop);
 }
 function BirthSim(imp, round){
     var mothers = 0;
@@ -548,9 +535,9 @@ function YearSim(imp, round){
     imp.year = imp.year + round;
     for(var i = 0; i < round; i++){
     imp.pop = PopAger(imp.pop, 1);
-    imp.totalPop = SumTwoDimensionalArray(imp.pop);
     imp.pop = DieSim(imp, round);
     imp.pop = BirthSim(imp, round);
+    imp.totalPop = SumTwoDimensionalArray(imp.pop);
     if(imp.totalPop == 0){
         GameOver(imp);
     }

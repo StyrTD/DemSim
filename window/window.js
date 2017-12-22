@@ -3,31 +3,8 @@ winIni = {
     "constWidth"    : window.innerWidth,
     "mouseRelation" : [1, 1]
 }
-console.log(winIni.mouseRelation);
-function callWin(){
-    win = {
-      "height"    : window.innerHeight,
-      "width"     : window.innerWidth,
-      "ini"       : {
-            "constHeight": winIni.constHeight,
-            "constWidth": winIni.constWidth
-      }
-    }
-    winIni = {
-        "constHeight"   : window.innerHeight,
-        "constWidth"    : window.innerWidth,
-        "mouseRelation" : [1, 1]
-    }
-    return(win);
-}
-function resizeEvent(imp){
-    var win             = callWin();
-    for (var i = 0; i < document.getElementsByClassName("WindowResizeSensitive").length; i++){
-        console.log(win.width);
-        document.getElementsByClassName("WindowResizeSensitive")[i].style.left = document.getElementsByClassName("WindowResizeSensitive")[i].style.left.substr(0, (document.getElementsByClassName("WindowResizeSensitive")[i].style.left.length - 2)) - win.ini.constWidth + win.width;
-    }
-    console.log(win);
-}
+//Building Functions
+//---------------------------------------------------------------
 function createNavBar(imp){
     var win           = callWin();                          //Define Win
     var nav           = document.createElement("div");
@@ -63,15 +40,7 @@ function createNavBar(imp){
     document.body.setAttribute("onresize", "resizeEvent(imp)");
 
 }
-function slideMenuBar(imp){
-    imp.classList.toggle("change");
-}
-function windowHover(imp){
-    for (var i = 0; i < document.getElementsByClassName("window").length; i++){
-        document.getElementsByClassName("window")[i].style.zIndex = 0;
-    }
-        imp.style.zIndex = 1;
-}
+
 function createFootBar(imp){
     var foot          = document.createElement("div");
         foot.id        = "windowFoot";
@@ -97,6 +66,7 @@ function createWindow(imp, parent){
             bar.innerHTML = imp.title;
         }
         bar.draggable = true;
+        bar.setAttribute("ondragstart", "WindowDragStart(this)");
         bar.setAttribute("ondrag", "WindowDrag(event, " + imp.id + ")");
         bar.setAttribute("ontouchmove", "WindowDrag(event, " + imp.id + ")");   //Mobile support
         bar.setAttribute("ondragend", "WindowDragEnd(event, " + imp.id + ")");
@@ -110,6 +80,10 @@ function createWindow(imp, parent){
         imp.appendChild(box);
     parent.appendChild(imp);
 }
+
+// Event handlers
+// ---------------------------------------------------------------------------------
+
 function WindowDrag(ev, imp){
     ev.preventDefault();
     var obj = document.getElementById(imp.id);
@@ -181,3 +155,40 @@ function WindowDragEnd(ev, imp){
     winIni.mouseRelation = [1, 1];
     imp.style.transform = translateX + translateY;
 }
+
+console.log(winIni.mouseRelation);
+function callWin(){
+    win = {
+      "height"    : window.innerHeight,
+      "width"     : window.innerWidth,
+      "ini"       : {
+            "constHeight": winIni.constHeight,
+            "constWidth": winIni.constWidth
+      }
+    }
+    winIni = {
+        "constHeight"   : window.innerHeight,
+        "constWidth"    : window.innerWidth,
+        "mouseRelation" : [1, 1]
+    }
+    return(win);
+}
+function resizeEvent(imp){
+    var win             = callWin();
+    for (var i = 0; i < document.getElementsByClassName("WindowResizeSensitive").length; i++){
+        console.log(win.width);
+        document.getElementsByClassName("WindowResizeSensitive")[i].style.left = document.getElementsByClassName("WindowResizeSensitive")[i].style.left.substr(0, (document.getElementsByClassName("WindowResizeSensitive")[i].style.left.length - 2)) - win.ini.constWidth + win.width;
+    }
+    console.log(win);
+}
+
+function slideMenuBar(imp){
+    imp.classList.toggle("change");
+}
+function windowHover(imp){
+    for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+        document.getElementsByClassName("window")[i].style.zIndex = 0;
+    }
+        imp.style.zIndex = 1;
+}
+
