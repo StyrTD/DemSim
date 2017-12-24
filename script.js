@@ -120,19 +120,20 @@ var imp = {
     "women": 0,
     "name": name,
     "year": 2014,
-    "ver":  "Alpha 0.2.1 - so fucking Alpha it contains angles!",
+    "ver":  "Alpha 0.2.2 - so fucking Alpha it contains angles!",
     "area": 475442,
     "dieRate": 8,   //per 1,000 persons/year
     "dlg": dlg,
     "birthRate": 1.6,
     "totalBirth": pop[0][0] + pop[0][1],
+    "totalDie": 2,
     "html": {
         "svg": svg,
         "svgNS": svgNS
     },
     "lifeExp": "75",
 }
-
+//0.2.2 - Further improvement of Window system (dynamic layers, correct mouse position), Death Counter (December 24, 2017)
 //0.2.1 - Feelable improvement of Window system, a.o. intelligent zIndex management
 document.title = imp.ver;
     imp.men = SumTwoDimensionalArrayRow(imp.pop, 0);
@@ -395,11 +396,15 @@ function runSVG(imp) { //Grafische Initialisierung
                 }
 }
 function DieSim(imp, round) {
+    var popBuf = imp.totalPop;
     for(var i = 0; i < 120; i++){
     console.log(i/120);
 }
     imp.pop[100][0] = 0;
     imp.pop[100][1] = 0;
+    imp.totalPop = SumTwoDimensionalArray(imp.pop);
+    imp.totalDie = popBuf - imp.totalPop;
+    console.log(imp.totalDie);
   return(imp.pop);
 }
 function BirthSim(imp, round){
@@ -449,10 +454,17 @@ function startSim(imp) {
         statWindow.title = "Statistics";
         createWindow(statWindow, document.body);
     var statWindowBox   = document.getElementById("statWindow_box");
+    //Births
     var totalBirthOut    = document.createElement("p");
         totalBirthOut.id = "totalBirthOut";
         totalBirthOut.innerHTML = FormatNum(imp.totalBirth) + " Geburten";
         statWindowBox.appendChild(totalBirthOut);
+    //Deaths
+    var totalDieOut      = document.createElement("p");
+        totalDieOut.id   = "totalDieOut";
+        totalDieOut.innerHTML = FormatNum(imp.totalDie) + " Tode";
+        statWindowBox.appendChild(totalDieOut);
+
     //Fetch Box
     var interfaceBox = document.getElementById("interface_box");
     //Name Display
@@ -547,7 +559,8 @@ function YearSim(imp, round){
 
     //TotalBirth
     imp.totalBirth = imp.pop[0][0] + imp.pop[0][1];
-    document.getElementById("totalBirthOut").innerHTML = FormatNum(imp.totalBirth) + " Geburten";
+    document.getElementById("totalBirthOut").innerHTML = FormatNum(imp.totalBirth) + " Geburten"; //Refresh Births
+    document.getElementById("totalDieOut").innerHTML = FormatNum(imp.totalDie) + " Tode";   //Refresh Deaths
     console.log(imp);
     }
     runInterface(imp);

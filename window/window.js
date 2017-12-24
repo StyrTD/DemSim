@@ -53,6 +53,7 @@ function createFootBar(imp){
 function createWindow(imp, parent){
     if(parent === undefined){var parent = document;}    //Undefined Ini
     imp.setAttribute("class", "window");
+    imp.style.zIndex = "1";
     //Clicking Bar
         imp.style.backgroundColor = "#fff";
         imp.setAttribute("onclick", "windowHover(this)");
@@ -83,41 +84,68 @@ function createWindow(imp, parent){
 
 // Event handlers
 // ---------------------------------------------------------------------------------
+function WindowDragStart(imp){
+        imp = imp.parentElement;    //Face parent div
+        console.log(imp.style.zIndex);
+        //Transparent all other windows
+        for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+            document.getElementsByClassName("window")[i].style.opacity = 0.5;
+            imp.style.opacity = 1;
+        }
+        //Get all zIndexes and set the hovered to highest
+        for (var i = 0; i < document.getElementsByClassName("window").length; i++){
+            console.log("if " + document.getElementsByClassName("window")[i].style.zIndex + " >= " + imp.style.zIndex);
+            if(parseInt(document.getElementsByClassName("window")[i].style.zIndex) >= parseInt(imp.style.zIndex)){
+                imp.style.zIndex = parseInt(document.getElementsByClassName("window")[i].style.zIndex) + 1;
+            }
+        }
 
+        var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);         //Get x-value of transform()
+        var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);         //Get y-value of transform()
+        transX = transX[1].substr(0, transX[1].length - transX[2].length).trim(); //value - px
+        transY = transY[1].substr(0, transY[1].length - transY[2].length).trim(); //value - px
+        //Set relative mouse position
+        try{        //Opera, Chrome, IE
+            var mouseX = window.event.clientX;
+            var mouseY = window.event.clientY;
+        }
+        catch(err){//Firefox
+            var mouseX = mouseEvent.clientX;
+            var mouseY = mouseEvent.clientY;
+        }
+        winIni.mouseRelation[0] = mouseX - transX; //Relative x Position of mouse
+        winIni.mouseRelation[1] = mouseY - transY; //Relative x Position of mouse
+    } 
 function WindowDrag(ev, imp){
-    ev.preventDefault();
+    //Get Object
     var obj = document.getElementById(imp.id);
-    //Transparent all other windows
-    for (var i = 0; i < document.getElementsByClassName("window").length; i++){
-        document.getElementsByClassName("window")[i].style.opacity = 0.5;
-                                                 obj.style.opacity = 1;
-    }
-    if(imp === undefined){
-        obj.setAttribute("zIndex", obj.style.zIndex);
-    }
-    obj.style.zIndex = 9000;
-    var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
-    var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
+        var transX = imp.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);         //Get x-value of transform()
+        var transY = imp.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);         //Get y-value of transform()
+    //Routine if ungiven
     if(transX === null){
         var transX = ["0px", "0px", "px"];
     }
     if(transY === null){
         var transY = ["0px", "0px", "px"];
     }
-    transX = transX[1].substr(0, transX[1].length - transX[2].length).trim();
-    transY = transY[1].substr(0, transY[1].length - transY[2].length).trim();
-    var pos = obj.getBoundingClientRect();
-    var mouseX = window.event.clientX;
-    var mouseY = window.event.clientY;
-    var posX = pos.left + (pos.right - pos.left) / 2 - transX;
-    var posY = pos.top - transY;
-    var moveX = Math.round((mouseX - posX));
-    var moveY = Math.round((mouseY - posY));
-    if(winIni.mouseRelation[0] == 1 && winIni.mouseRelation[1] == 1){
-        winIni.mouseRelation[0] = mouseX - pos.left;
-        winIni.mouseRelation[1] = mouseY - pos.top;
 
-    }
+    transX = transX[1].substr(0, transX[1].length - transX[2].length).trim(); //value - px
+    transY = transY[1].substr(0, transY[1].length - transY[2].length).trim(); //value - px
+
+    var pos = obj.getBoundingClientRect();
+        //Set relative mouse position
+        try{        //Opera, Chrome, IE
+            var mouseX = window.event.clientX;
+            var mouseY = window.event.clientY;
+        }
+        catch(err){//Firefox
+            var mouseX = mouseEvent.clientX;
+            var mouseY = mouseEvent.clientY;
+        }
+    var posX = pos.left - transX; //Original x Position
+    var posY = pos.top - transY; //Original y Position
+    var moveX = Math.round((mouseX - posX - winIni.mouseRelation[0]));
+    var moveY = Math.round((mouseY - posY - winIni.mouseRelation[1]));
     var translateX = "translateX(" + moveX + "px ) ";
     var translateY = "translateY(" + moveY + "px)";
     imp.style.transform = translateX + translateY;
@@ -128,11 +156,7 @@ function WindowDragEnd(ev, imp){
         //De-Transparent all other windows
         for (var i = 0; i < document.getElementsByClassName("window").length; i++){
             document.getElementsByClassName("window")[i].style.opacity = 1;
-            document.getElementsByClassName("window")[i].style.zIndex = 0;
         }
-        obj.style.zIndex = 1;
-    obj.style.zIndex = parseInt(obj.getAttribute("zIndex")) + 1;
-    obj.removeAttribute("zIndex");
     var transX = imp.parentElement.style.transform.match(/translateX\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     var transY = imp.parentElement.style.transform.match(/translateY\(([0-9]+(px|em|%|ex|ch|rem|vh|vw|vmin|vmax|mm|cm|in|pt|pc))\)/);
     if(transX === null){
@@ -144,12 +168,19 @@ function WindowDragEnd(ev, imp){
     transX = transX[1].substr(0, transX[1].length - transX[2].length).trim();
     transY = transY[1].substr(0, transY[1].length - transY[2].length).trim();
     var pos = obj.getBoundingClientRect();
-    var mouseX = window.event.clientX;
-    var mouseY = window.event.clientY;
-    var posX = pos.left + (pos.right - pos.left) / 2 - transX;
+        //Set relative mouse position
+        try{        //Opera, Chrome, IE
+            var mouseX = window.event.clientX;
+            var mouseY = window.event.clientY;
+        }
+        catch(err){//Firefox
+            var mouseX = mouseEvent.clientX;
+            var mouseY = mouseEvent.clientY;
+        }
+    var posX = pos.left - transX;
     var posY = pos.top - transY;
-    var moveX = Math.round(mouseX + (posX - transX));
-    var moveY = Math.round(mouseY + (posY - transY));
+    var moveX = Math.round((mouseX - posX - winIni.mouseRelation[0]));
+    var moveY = Math.round((mouseY - posY - winIni.mouseRelation[1]));
     var translateX = "translateX(" + parseInt(moveX - winIni.mouseRelation[0]) + "px ) ";
     var translateY = "translateY(" + parseInt(moveY - winIni.mouseRelation[1]) + "px)";
     winIni.mouseRelation = [1, 1];
